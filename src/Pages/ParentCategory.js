@@ -3,72 +3,28 @@ import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-const Department = () => {
-    // Display Department Data List
-    const [departmentList, setDepartmentList] = useState([]);
-    const showDepartmentData = async () => {
-        const result = await axios.get("https://freeapi.miniprojectideas.com/api/TicketsNew/GetDepartments")
-        setDepartmentList(result.data.data)
+const ParentCategory = () => {
+
+    const [parentCategory, setParentCategory] = useState([]);
+    const showParentCategoryData = async () => {
+        const result = await axios.get('https://freeapi.gerasim.in/api/TicketsNew/GetParentCategory')
+        setParentCategory(result.data.data)
         setIsLoader(false)
     }
 
-    // Loaders
-    let [isLoader, setIsLoader] = useState(true);
 
-    // Create Department
-    const [departmentObj, setDepartmentObj] = useState(
-        {
-            "deptId": 0,
-            "deptName": "",
-            "createdDate": new Date()
-        }
-    )
+    const [parentCategoryObj, setParentObj] = useState({
+        "categoryId": 0,
+        "categoryName": "",
+        "deptId": 0
+    })
 
-    const saveDepartment = async () => {
-        debugger
-        const result = await axios.post("https://freeapi.miniprojectideas.com/api/TicketsNew/CreateDepartment", departmentObj)
-        if (result.data.result) {
-            alert("Save Department")
-            showDepartmentData()
-            reset1()
-            setisShowForm(false)
-        } else {
-            alert(result.data.message)
-        }
-
-    }
-
-    const changeFormValue = (event, key) => {
-        setDepartmentObj(prevObj => ({ ...prevObj, [key]: event.target.value }))
-    }
-
-    // Edit Department
-    const editDepartment = (item) => {
-        setisShowForm(true)
-        setDepartmentObj(prevObj => ({
-            ...prevObj, deptId: item.deptId,
-            deptName: item.deptName,
-            createdDate: item.createdDate
-        }))
-    }
-    // const DetailsDepartment = (item) => {
-    //     setisShowForm(true)
-    //     setDepartmentObj(prevObj => ({
-    //         ...prevObj, deptId: item.deptId,
-    //         deptName: item.deptName,
-    //         createdDate: item.createdDate
-    //     }))
-
-    // }
-
-
-    // Update Department
-    const updateDepartment = async () => {
+    const saveParentCategory = async () => {
         try {
-            const result = await axios.put("https://freeapi.miniprojectideas.com/api/TicketsNew/UpdateDepartment", departmentObj)
+            const result = await axios.post('https://freeapi.gerasim.in/api/TicketsNew/CreateParentCategory', parentCategoryObj)
             if (result.data.result) {
-                alert("Update Successfully")
-                showDepartmentData()
+                alert('Save Parent Category')
+                showParentCategoryData()
                 reset1()
                 setisShowForm(false)
             } else {
@@ -79,35 +35,75 @@ const Department = () => {
         }
     }
 
-    // Delete Department
-    const deleteDepartment = async (id) => {
-        const isDelete = window.confirm("Do you Want to Delete");
-        if (isDelete) {
-            const result = await axios.delete("https://freeapi.miniprojectideas.com/api/TicketsNew/DeleteDepartment?id=" + id)
-            if (result.data.result) {
-                alert("Department Removed")
-                showDepartmentData()
+    const changeFormValue = (event, key) => {
+        setParentObj(prevObj => ({ ...prevObj, [key]: event.target.value }))
+    }
 
+
+    const editParentCategory = (item) => {
+        setisShowForm(true)
+        setParentObj(prevObj => ({
+            ...prevObj, categoryId: item.categoryId,
+            categoryName: item.categoryName,
+            deptId: item.deptId
+        }))
+
+    }
+
+    const updateParentCategory = async () => {
+        try {
+            const result = await axios.put('https://freeapi.gerasim.in/api/TicketsNew/UpdateParentCategory', parentCategoryObj)
+            if (result.data.result) {
+                alert("Update Parent Category")
+                showParentCategoryData()
+                reset1()
+                setisShowForm(false)
+            } else {
+                alert(result.data.message)
+            }
+        } catch (error) {
+            alert(error.code)
+        }
+    }
+
+    const deleteParentCategory = async (id) => {
+        const isDelete = "Do you want to Remove";
+        if (isDelete) {
+            const result = await axios.delete('https://freeapi.gerasim.in/api/TicketsNew/DeleteParentCategory?id=' + id)
+            if (result.data.result) {
+                alert("Delete Parent Category")
+                showParentCategoryData()
             } else {
                 alert(result.data.message)
             }
         }
     }
 
-    // Reset Button
     const reset1 = () => {
-        setDepartmentObj({
-            "deptId": 0,
-            "deptName": "",
-            "createdDate": new Date()
+        setParentObj({
+            "categoryId": 0,
+            "categoryName": "",
+            "deptId": 0
         })
     }
 
+    // Display Department Data List
+    const [departmentList, setDepartmentList] = useState([]);
+    const showDepartmentData = async () => {
+        const result = await axios.get("https://freeapi.miniprojectideas.com/api/TicketsNew/GetDepartments")
+        setDepartmentList(result.data.data)
+        setIsLoader(false)
+    }
 
-    // UseEffect 
     useEffect(() => {
+        showParentCategoryData()
         showDepartmentData()
     }, [])
+
+
+
+    // Loaders
+    let [isLoader, setIsLoader] = useState(true);
 
     // Show And Hide
     let [isShowForm, setisShowForm] = useState(false);
@@ -134,35 +130,26 @@ const Department = () => {
                 {!isShowForm &&
                     <div className='card'>
                         <div className='card-title text-center mt-4'>
-                            <h1>Department Listing</h1>
+                            <h1>Parent Category Listing</h1>
                         </div>
                         <div className='card-body'>
                             <div >
                                 <Link className='btn btn-success ' onClick={showForm}>Add Data</Link>
                                 {!isShowCard && (
-                                    <button className='btn btn-body btn-success m-2' onClick={showCard}>
-
-                                        card
-                                    </button>
+                                    <button className='btn btn-body btn-success m-2' onClick={showCard}>card</button>
                                 )}
 
                                 {isShowCard && (
-                                    <button className='btn btn-body  btn-success m-2' onClick={showTable}>
-
-                                        Table
-                                    </button>
+                                    <button className='btn btn-body  btn-success m-2' onClick={showTable}>Table</button>
                                 )}
-
-
                             </div>
                             <table className='table table-bordered mt-4' >
                                 <thead >
                                     <tr>
                                         <th>Sr No</th>
-                                        <th>Department Name</th>
-                                        <th>Created Date</th>
+                                        <th>categoryName</th>
+                                        <th>deptName</th>
                                         <th>Action</th>
-
                                     </tr>
                                 </thead>
                                 {
@@ -182,17 +169,16 @@ const Department = () => {
                                         </tr>
                                     </tbody>
                                 }
-
                                 <tbody>
-                                    {departmentList &&
-                                        departmentList.map((item, index) => (
-                                            <tr key={item.id}>
+                                    {parentCategory &&
+                                        parentCategory.map((item, index) => (
+                                            <tr key={item.categoryId}>
                                                 <td>{index + 1}</td>
+                                                <td>{item.categoryName}</td>
                                                 <td>{item.deptName}</td>
-                                                <td>{item.createdDate}</td>
                                                 <td>
-                                                    <Link className='btn btn-primary m-2' onClick={() => { editDepartment(item) }}><FaEdit /></Link>
-                                                    <Link className='btn btn-danger m-2' onClick={() => { deleteDepartment(item.deptId) }}><FaTrashAlt /></Link>
+                                                    <Link className='btn btn-primary m-2' onClick={() => { editParentCategory(item) }}><FaEdit /></Link>
+                                                    <Link className='btn btn-danger m-2' onClick={() => { deleteParentCategory(item.categoryId) }}><FaTrashAlt /></Link>
                                                     {/* <Link className='btn btn-primary m-2' onClick={() => { DetailsDepartment(item) }}><CgDetailsMore /></Link> */}
                                                 </td>
                                             </tr>
@@ -211,7 +197,7 @@ const Department = () => {
                             <form className='container'>
                                 <div className='card'>
                                     <div className='card-title text-center mt-4'>
-                                        <h1>Department </h1>
+                                        <h1>Parent Category </h1>
                                     </div>
                                     <div className='card-body'>
                                         <div className='row'>
@@ -223,13 +209,20 @@ const Department = () => {
                                                 </div> */}
 
                                                 <div className='form-group'>
-                                                    <label>Department Name</label>
-                                                    <input type='text' className='form-control' value={departmentObj.deptName} onChange={(event) => { changeFormValue(event, 'deptName') }}></input>
+                                                    <label>Category Name</label>
+                                                    <input type='text' className='form-control' value={parentCategoryObj.categoryName} onChange={(event) => { changeFormValue(event, 'categoryName') }}></input>
                                                 </div>
 
                                                 <div className='form-group'>
-                                                    <label>Email</label>
-                                                    <input type='date' className='form-control' value={departmentObj.createdDate} onChange={(event) => { changeFormValue(event, 'createdDate') }} ></input>
+                                                    <label>Department Name</label>
+                                                    <select className='form-select' value={parentCategoryObj.deptId} onChange={(event) => { changeFormValue(event, 'deptId') }}>
+                                                        <option>Choose Department</option>
+                                                        {
+                                                            departmentList.map((item) => {
+                                                                return (<option value={item.deptId}>{item.deptName}</option>)
+                                                            })
+                                                        }
+                                                    </select>
                                                 </div>
 
 
@@ -242,8 +235,8 @@ const Department = () => {
                                                 </div> */}
 
                                                 <div className='form-group '>
-                                                    {departmentObj.deptId === 0 && <Link className="btn btn-primary m-2" onClick={saveDepartment}>Save Data</Link>}
-                                                    {departmentObj.deptId !== 0 && <Link className="btn btn-warning m-2" onClick={updateDepartment}>Update Data</Link>}
+                                                    {parentCategoryObj.categoryId === 0 && <Link className="btn btn-primary m-2" onClick={saveParentCategory}>Save Data</Link>}
+                                                    {parentCategoryObj.categoryId !== 0 && <Link className="btn btn-warning m-2" onClick={updateParentCategory}>Update Data</Link>}
                                                     <Link onClick={closeForm} className='btn btn-danger m-2'>Back</Link>
                                                 </div>
                                             </div>
@@ -280,4 +273,4 @@ const Department = () => {
     );
 };
 
-export default Department;
+export default ParentCategory;
