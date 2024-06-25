@@ -1,1 +1,1 @@
-# tickes_api_project
+# tickets_api_project
