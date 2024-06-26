@@ -67,7 +67,7 @@ const ParentCategory = () => {
     }
 
     const deleteParentCategory = async (id) => {
-        const isDelete = "Do you want to Remove";
+        const isDelete = window.confirm("Do you want to Remove");
         if (isDelete) {
             const result = await axios.delete('https://freeapi.gerasim.in/api/TicketsNew/DeleteParentCategory?id=' + id)
             if (result.data.result) {
@@ -77,7 +77,7 @@ const ParentCategory = () => {
                 alert(result.data.message)
             }
         }
-    }
+    } 
 
     const reset1 = () => {
         setParentObj({
